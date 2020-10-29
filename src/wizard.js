@@ -69,6 +69,13 @@ const options = [
 		type: 'boolean',
 		description: 'Save images scraped from post body content',
 		default: true
+	},
+	{
+		name: 'post-type',
+		aliases: ['post_type'],
+		type: 'string',
+		description: 'Wordpress XML post_type (For example post or pt_blog)',
+		default: 'post'
 	}
 ];
 
@@ -107,6 +114,10 @@ function extendOptionsData() {
 		boolean: {
 			prompt: 'confirm',
 			coerce: coerceBoolean,
+		},
+		string: {
+			prompt: 'input',
+			coerce: coerceString
 		},
 		file: {
 			prompt: 'input',
@@ -177,6 +188,10 @@ function parseCommandLine(argv) {
 
 function coerceBoolean(value) {
 	return !['false', 'no', '0'].includes(value.toLowerCase());
+}
+
+function coerceString(value) {
+	return value;
 }
 
 function coercePath(value) {

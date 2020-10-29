@@ -37,7 +37,7 @@ function collectPosts(data, config, authors) {
 	// this is passed into getPostContent() for the markdown conversion
 	const turndownService = translator.initTurndownService();
 
-	const posts = getItemsOfType(data, 'post')
+	const posts = getItemsOfType(data, config.postType)
 		.filter(post => post.status[0] !== 'trash' && post.status[0] !== 'draft')
 		.map(post => ({
 			// meta data isn't written to file, but is used to help with other things
