@@ -20,13 +20,13 @@
 		"node": ">= 12.14.0"
 	},
 	"dependencies": {
-		"camelcase": "^6.0.0",
-		"chalk": "^4.0.0",
-		"commander": "^5.0.0",
-		"inquirer": "^7.1.0",
-		"luxon": "^1.23.0",
+		"camelcase": "^6.2.0",
+		"chalk": "^4.1.0",
+		"commander": "^5.1.0",
+		"inquirer": "^7.3.3",
+		"luxon": "^1.25.0",
 		"request": "^2.88.2",
-		"request-promise-native": "^1.0.8",
+		"request-promise-native": "^1.0.9",
 		"turndown": "^6.0.0",
 		"xml2js": "^0.4.23"
 	},
