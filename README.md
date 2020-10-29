@@ -155,3 +155,13 @@ Whether or not to download and save images attached to posts. Generally speaking
 - Default: `true`
 
 Whether or not to download and save images scraped from &lt;img&gt; tags in post body content. Images are saved into `/images`. The &lt;img&gt; tags are updated to point to where the images are saved.
+
+## Examples
+
+`examples/` folder contains some examples and the outputs they generate.
+For convenience, both input and output are commited.
+These commands generate the outputs:
+
+```
+bash examples.sh
+```
