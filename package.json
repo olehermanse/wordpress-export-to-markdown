@@ -12,7 +12,7 @@
 		"wordpress"
 	],
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"test": "mkdir -p tmp/ && git diff > tmp/b && bash examples.sh && git diff > tmp/a && diff tmp/b tmp/a"
 	},
 	"author": "Will Boyd <will@codersblock.com> (https://codersblock.com)",
 	"license": "MIT",
