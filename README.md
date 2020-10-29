@@ -9,6 +9,7 @@ Each post is saved as a separate Markdown file with appropriate frontmatter. Ima
 ## Quick Start
 
 You'll need:
+
 - [Node.js](https://nodejs.org/) v12.14 or later
 - Your [WordPress export file](https://wordpress.org/support/article/tools-export-screen/)
 
