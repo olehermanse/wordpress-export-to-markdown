@@ -169,6 +169,14 @@ Whether or not to download and save images attached to posts. Generally speaking
 
 Whether or not to download and save images scraped from &lt;img&gt; tags in post body content. Images are saved into `/images`. The &lt;img&gt; tags are updated to point to where the images are saved.
 
+### Put original URL in frontmatter
+
+- Argument: `--original-url`
+- Type: `boolean`
+- Default: `false`
+
+Put the original URL from wordpress in as `original_url` in frontmatter.
+
 ## Examples
 
 `examples/` folder contains some examples and the outputs they generate.

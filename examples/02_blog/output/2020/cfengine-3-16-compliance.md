@@ -2,6 +2,9 @@
 author: "Ole Herman Elgesem"
 title: "CFEngine 3.16 - Compliance"
 date: "2020-06-25T14:32:17.000Z"
+aliases:
+  - "/company/blog-detail/cfengine-3-16-compliance/"
+original_url: "https://cfengine.com/company/blog-detail/cfengine-3-16-compliance/"
 ---
 
 Today we announce the newest additions to CFEngine. CFEngine 3.16 brings several improvements, bug fixes, and new features. The theme for this release has been compliance, and it notably includes a new category of reports for proving compliance to regulation and other compliance frameworks in high level, easy to read reports.

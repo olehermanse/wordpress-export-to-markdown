@@ -9,4 +9,5 @@ rm -rf output/ && \
     --month-folders false \
     --post-folders false \
     --save-attached-images true \
-    --save-scraped-images true
+    --save-scraped-images true \
+    --original-url true

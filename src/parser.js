@@ -45,6 +45,7 @@ function collectPosts(data, config, authors) {
 				id: getPostId(post),
 				slug: getPostSlug(post),
 				coverImageId: getPostCoverImageId(post),
+				link: getPostUrl(post),
 				imageUrls: []
 			},
 			frontmatter: {
@@ -53,6 +54,8 @@ function collectPosts(data, config, authors) {
 				date: getPostDate(post),
 				categories: getCategories(post),
 				tags: getTags(post),
+				aliases: getAliases(post),
+				original_url: config.originalUrl ? getPostUrl(post) : null,
 			},
 			content: translator.getPostContent(post, turndownService, config)
 		}));
@@ -82,6 +85,15 @@ function getPostId(post) {
 
 function getPostSlug(post) {
 	return post.post_name[0];
+}
+
+function getPostUrl(post) {
+	return post.link[0];
+}
+
+function getAliases(post) {
+	const url = new URL(getPostUrl(post));
+	return [url.pathname];
 }
 
 function getPostCoverImageId(post) {

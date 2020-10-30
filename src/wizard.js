@@ -76,6 +76,13 @@ const options = [
 		type: 'string',
 		description: 'Wordpress XML post_type (For example post or pt_blog)',
 		default: 'post'
+	},
+	{
+		name: 'original-url',
+		aliases: ['original_url'],
+		type: 'boolean',
+		description: 'Save images scraped from post body content',
+		default: false
 	}
 ];
 

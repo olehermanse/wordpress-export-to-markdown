@@ -7,6 +7,8 @@ categories:
 tags:
   - "coding"
   - "example"
+aliases:
+  - "/example-post-title/"
 ---
 
 Some example content.

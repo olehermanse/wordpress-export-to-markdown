@@ -2,6 +2,9 @@
 author: "Ole Herman Elgesem"
 title: "Introducing cf-remote: Tooling to deploy CFEngine"
 date: "2019-04-30T14:03:47.000Z"
+aliases:
+  - "/company/blog-detail/cf-remote/"
+original_url: "https://cfengine.com/company/blog-detail/cf-remote/"
 ---
 
 About a year ago, I wrote a small python script to automate installing and bootstrapping CFEngine on virtual machines in AWS. It had some hard coded IP addresses that I needed to update when I spawned new hosts, but other than that, it worked well. During manual testing, it saved me a lot of time instead of having to do things manually.
