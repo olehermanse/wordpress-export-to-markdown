@@ -21,7 +21,7 @@ async function parseFilePromise(config) {
 		images.push(...collectAttachedImages(data));
 	}
 	if (config.saveScrapedImages) {
-		images.push(...collectScrapedImages(data));
+		images.push(...collectScrapedImages(data, config));
 	}
 
 	mergeImagesIntoPosts(images, posts);
@@ -133,9 +133,9 @@ function collectAttachedImages(data) {
 	return images;
 }
 
-function collectScrapedImages(data) {
+function collectScrapedImages(data, config) {
 	const images = [];
-	getItemsOfType(data, 'post').forEach(post => {
+	getItemsOfType(data, config.postType).forEach(post => {
 		const postId = post.post_id[0];
 		const postContent = post.encoded[0];
 		const postLink = post.link[0];
