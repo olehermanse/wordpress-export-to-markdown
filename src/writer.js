@@ -59,7 +59,7 @@ function formatArray(a) {
 }
 
 function formatValue(v) {
-	return ('"' + (v || '').replace(/"/g, '\\"') + '"');
+	return (' "' + (v || '').replace(/"/g, '\\"') + '"');
 }
 
 async function loadMarkdownFilePromise(post) {
@@ -71,7 +71,7 @@ async function loadMarkdownFilePromise(post) {
 			const value_formatted = Array.isArray(value)
 				? formatArray(value)
 				: formatValue(value);
-			output += key + ': ' + value_formatted + '\n';
+			output += key + ':' + value_formatted + '\n';
 		}
 	});
 	output += '---\n\n' + post.content + '\n';
