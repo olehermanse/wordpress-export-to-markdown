@@ -47,6 +47,19 @@ node index.js --post-folders=false --prefix-date=true
 
 The wizard will still ask you about any options not specifed on the command line. To skip the wizard entirely and use default values for unspecified options, add `--wizard=false`.
 
+### run.sh
+
+If you are running the converter often, using the wizard or specifying options can be tedious.
+The run.sh script can be used:
+
+```
+bash run.sh
+```
+
+This assumes your input is `export.xml`, output is `output/` and deletes the output folder before starting.
+Open it and edit the options you want.
+It shows all options available so it is easy to change one of them to your preference.
+
 ## Options
 
 ### Use wizard?
