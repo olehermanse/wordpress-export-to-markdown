@@ -67,10 +67,12 @@ async function loadMarkdownFilePromise(post) {
 	Object.entries(post.frontmatter).forEach(pair => {
 		const key = pair[0];
 		const value = pair[1];
-		const value_formatted = Array.isArray(value)
-			? formatArray(value)
-			: formatValue(value);
-		output += key + ': ' + value_formatted + '\n';
+		if (value != null && value != [] && value != "") {
+			const value_formatted = Array.isArray(value)
+				? formatArray(value)
+				: formatValue(value);
+			output += key + ': ' + value_formatted + '\n';
+		}
 	});
 	output += '---\n\n' + post.content + '\n';
 	return output;
