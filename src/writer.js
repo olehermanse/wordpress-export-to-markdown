@@ -54,14 +54,23 @@ async function writeMarkdownFilesPromise(posts, config) {
 	await processPayloadsPromise(payloads, loadMarkdownFilePromise, config);
 }
 
+function formatArray(a) {
+	return (a.length === 0 ? "" : "\n  - \"" + a.join("\"\n  - \"") + "\"");
+}
+
+function formatValue(v) {
+	return ('"' + (v || '').replace(/"/g, '\\"') + '"');
+}
+
 async function loadMarkdownFilePromise(post) {
 	let output = '---\n';
 	Object.entries(post.frontmatter).forEach(pair => {
 		const key = pair[0];
-		const value = Array.isArray(pair[1])
-			? (pair[1].length === 0 ? "" : "\n  - \"" + pair[1].join("\"\n  - \"") + "\"")
-			: '"' + (pair[1] || '').replace(/"/g, '\\"') + '"';
-		output += key + ': ' + value + '\n';
+		const value = pair[1];
+		const value_formatted = Array.isArray(value)
+			? formatArray(value)
+			: formatValue(value);
+		output += key + ': ' + value_formatted + '\n';
 	});
 	output += '---\n\n' + post.content + '\n';
 	return output;
