@@ -104,7 +104,7 @@ async function loadImageFilePromise(imageUrl) {
 	} catch (ex) {
 		if (ex.name === 'StatusCodeError') {
 			// these errors contain a lot of noise, simplify to just the status code
-			ex.message = ex.statusCode;
+			ex.message = ex.statusCode + " " + ex.options.url;
 		}
 		throw ex;
 	}
