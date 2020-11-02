@@ -117,7 +117,11 @@ async function loadJsonFilePromise(post) {
 }
 
 async function loadHtmlFilePromise(post) {
-	return post.contentHtml;
+	const content = post.contentHtml;
+	if (content[content.length - 1] != '\n') {
+		return content + '\n';
+	}
+	return content;
 }
 
 async function writeImageFilesPromise(posts, config) {
