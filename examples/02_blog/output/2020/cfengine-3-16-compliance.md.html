@@ -1,0 +1,114 @@
+Today we announce the newest additions to CFEngine. CFEngine 3.16 brings several improvements, bug fixes, and new features. The theme for this release has been compliance, and it notably includes a new category of reports for proving compliance to regulation and other compliance frameworks in high level, easy to read reports.
+
+If you are interested to learn more about CFEngine, schedule training, or hear about pricing options, feel free to <a href="https://cfengine.com/engage/contact/">reach out to us!</a>
+<h1>What's new</h1>
+<h2>Compliance reports (Beta)</h2>
+Compliance reports allow you to implement internal or regulatory frameworks as a list of checks which have to pass on all or a subset of your hosts. The system is very flexible, allowing you to implement checks using Inventory values, software updates, or even custom SQL queries. Once the report is completed, the results can be exported to PDF, or scheduled to run at a fixed interval, for example every week. Different compliance reports can be set up for various stakeholders in your organization, and automated e-mails with PDFs can bring this valuable information to people/departments which don't use Mission Portal directly. This feature is still in beta, and a lot of the UI will change, but we are excited to show it to you and start getting some feedback on it, so it will be in a great shape for the next LTS release.
+
+[caption id="attachment_10076" align="alignnone" width="564"]<img class="wp-image-10076 size-medium" src="https://cfengine.com/wp-content/uploads/2020/06/Mission_Portal_Compliance-Infrastructure-compliance-564x800.png" alt="" width="564" height="800" /> Compliance report (beta)[/caption]
+<h2>Secret Encryption</h2>
+A new tool has been introduced, <code>cf-secret</code>, which allows you to encrypt files for specific hosts in your infrastructure.
+It is open-source, available in both community and enterprise packages, and can be used from policy or as a stand-alone tool.
+
+<img class="alignnone size-full wp-image-10077" src="https://cfengine.com/wp-content/uploads/2020/06/Screenshot-2020-06-25-at-09.18.17.png" alt="" width="680" height="92" />
+<a href="https://cfengine.com/company/blog-detail/cf-secret/">Read more about <code>cf-secret</code> here.</a>
+<h2>Detailed host and license counts</h2>
+Mission Portal now gives you a detailed overview of your hosts, including the license count, number of recently deleted hosts, as well as the total number of hosts before RBAC filtering is applied. This should clear up some confusion in large infrastructures, especially when you are approaching the license count, and if you decommission hosts frequently. (Unfiltered host count is a separate control in our Role Based Access Control (RBAC) system, so you can grant or remove access to it for any user/role).
+
+[caption id="attachment_10075" align="alignnone" width="375"]<img class="wp-image-10075 size-full" src="https://cfengine.com/wp-content/uploads/2020/06/Screenshot-2020-06-24-at-12.10.23.png" alt="" width="375" height="461" /> Detailed breakdown of license information and host counts[/caption]
+<h2>New version macros</h2>
+From CFEngine 3.16 and onward, you can more easily target specific CFEngine versions within the policy language. Previously, you could use the <code>minimum_version</code> macro to avoid using newer syntax and features on older versions that don't support it. However, there was no obvious approach to where you would put the alternative (the policy which you want to run on older versions only). For this reason and to allow greater flexibility to policy writers, we have introduced a few new macros:
+<ul>
+ 	<li><code>maximum_version</code></li>
+ 	<li><code>else</code></li>
+ 	<li><code>at_version</code></li>
+ 	<li><code>between_versions</code></li>
+ 	<li><code>before_version</code></li>
+ 	<li><code>after_version</code></li>
+</ul>
+<a href="https://docs.cfengine.com/docs/3.16/reference-macros.html">Read more about all these macros in the documentation</a>.
+<h2>New functions</h2>
+CFEngine 3.16.0 introduces 9 new functions. To complement the version macros, which function at a parsing level, we also now have functions for making decisions based on the version of the agent from the policy.
+<ul>
+ 	<li><code><a href="https://docs.cfengine.com/docs/3.16/reference-functions-cf_version_after.html">cf_version_after()</a></code></li>
+ 	<li><code><a href="https://docs.cfengine.com/docs/3.16/reference-functions-cf_version_at.html">cf_version_at()</a></code></li>
+ 	<li><code><a href="https://docs.cfengine.com/docs/3.16/reference-functions-cf_version_before.html">cf_version_before()</a></code></li>
+ 	<li><code><a href="https://docs.cfengine.com/docs/3.16/reference-functions-cf_version_between.html">cf_version_between()</a></code></li>
+ 	<li><code><a href="https://docs.cfengine.com/docs/3.16/reference-functions-cf_version_maximum.html">cf_version_maximum()</a></code></li>
+ 	<li><code><a href="https://docs.cfengine.com/docs/3.16/reference-functions-cf_version_minimum.html">cf_version_minimum()</a></code></li>
+</ul>
+A new utility function to strip leading and trailing whitespace was added.
+<ul>
+ 	<li><a href="https://docs.cfengine.com/docs/3.16/reference-functions-string_trim.html"><code>string_trim()</code></a></li>
+</ul>
+And two new data validation functions were added for making decisions based on data validity.
+<ul>
+ 	<li><code><a href="https://docs.cfengine.com/docs/3.16/reference-functions-validdata.html">validdata()</a></code><a href="https://docs.cfengine.com/docs/3.16/reference-functions-validdata.html"><code></code></a></li>
+ 	<li><a href="https://docs.cfengine.com/docs/3.16/reference-functions-validjson.html"><code>validjson()</code></a></li>
+</ul>
+<h2>New files promise type attribute</h2>
+The new content attribute for <code>files</code> type promises make it more clear and concise to promise the full content of a file.
+<div id="text-1" class="outline-text-2">
+<div class="org-src-container">
+
+<label class="org-src-name"><span class="listing-number">An example</span> illustrating files promise content attribute</label>
+<pre class="src src-cfengine3"><span style="color: #4f97d7;">bundle</span> <span style="color: #a45bad;">agent</span> <span style="color: #bc6ec5; font-weight: bold;">example_file_content</span>
+<span style="color: #2aa1ae;"># </span><span style="color: #2aa1ae;">@brief Example showing files content</span>
+<span style="color: #4f97d7;">{</span>
+  <span style="color: #4f97d7;">vars</span>:
+      <span style="color: #2d9574;">"my_content"</span>
+        <span style="color: #ce537a; font-weight: bold;">string</span> =&gt; <span style="color: #2d9574;">"Hello from var!"</span>;
+
+  <span style="color: #4f97d7;">files</span>:
+      <span style="color: #2d9574;">"/tmp/hello_string"</span>
+        create =&gt; <span style="color: #2d9574;">"true"</span>,
+        content =&gt; <span style="color: #2d9574;">"Hello from string!"</span>;
+
+      <span style="color: #2d9574;">"/tmp/hello_var"</span>
+        create =&gt; <span style="color: #2d9574;">"true"</span>,
+        content =&gt; <span style="color: #2d9574;">"$(my_content)"</span>;
+
+  <span style="color: #4f97d7;">reports</span>:
+      <span style="color: #2d9574;">"/tmp/hello_string"</span>
+        printfile =&gt; cat<span style="color: #bc6ec5;">(</span> $<span style="color: #2d9574;">(</span><span style="color: #7590db;">this.promiser</span><span style="color: #2d9574;">)</span> <span style="color: #bc6ec5;">)</span>;
+      <span style="color: #2d9574;">"/tmp/hello_var"</span>
+        printfile =&gt; cat<span style="color: #bc6ec5;">(</span> $<span style="color: #2d9574;">(</span><span style="color: #7590db;">this.promiser</span><span style="color: #2d9574;">)</span> <span style="color: #bc6ec5;">)</span>;
+<span style="color: #4f97d7;">}</span>
+
+<span style="color: #4f97d7;">body</span> <span style="color: #a45bad;">printfile</span> <span style="color: #bc6ec5; font-weight: bold;">cat</span><span style="color: #4f97d7;">(</span><span style="color: #7590db;">file</span><span style="color: #4f97d7;">)</span>
+<span style="color: #2aa1ae;"># </span><span style="color: #2aa1ae;">@brief Report the contents of a file</span>
+<span style="color: #2aa1ae;"># </span><span style="color: #2aa1ae;">@param file The full path of the file to report</span>
+<span style="color: #4f97d7;">{</span>
+        file_to_print =&gt; <span style="color: #2d9574;">"$(file)"</span>;
+        number_of_lines =&gt; <span style="color: #2d9574;">"inf"</span>;
+<span style="color: #4f97d7;">}</span>
+
+<span style="color: #4f97d7;">bundle</span> <span style="color: #a45bad;">agent</span> <span style="color: #bc6ec5; font-weight: bold;">__main__</span>
+<span style="color: #4f97d7;">{</span>
+  <span style="color: #4f97d7;">methods</span>: <span style="color: #2d9574;">"example_file_content"</span>;
+<span style="color: #4f97d7;">}</span>
+</pre>
+</div>
+Here we can see the results of executing the example above.
+<pre class="example"># cf-agent --no-lock --file /tmp/example_file_content.cf
+R: /tmp/hello_string
+R: Hello from string!
+R: /tmp/hello_var
+R: Hello from var!
+</pre>
+</div>
+You can find the <a href="https://docs.cfengine.com/docs/3.16/reference-promise-types-files.html#content">documentation about the content attribute here</a>.
+<h1>Changelogs</h1>
+We have made a lot of smaller improvements, dependency updates, and bug fixes which would not fit into a single blog post. Some of these are brand new to CFEngine 3.16, while some we were also included in the <a href="https://cfengine.com/company/blog-detail/cfengine-3-12-5-and-3-15-2-released/">recent 3.12.5 and 3.15.2 releases</a>. You can read all the details in our changelogs:
+<ul>
+ 	<li><a href="https://docs.cfengine.com/docs/3.16/guide-latest-release-whatsnew-changelog-core.html">Core</a></li>
+ 	<li><a href="https://docs.cfengine.com/docs/3.16/guide-latest-release-whatsnew-changelog-enterprise.html">Enterprise</a></li>
+ 	<li><a href="https://docs.cfengine.com/docs/3.16/guide-latest-release-whatsnew-changelog-masterfiles-policy-framework.html">Masterfiles</a></li>
+</ul>
+<h1>Contributing</h1>
+We are always looking for new <strong>contributions to CFEngine!</strong> Are you unsure how to get started? Please check out our <a href="https://github.com/cfengine/core/blob/master/CONTRIBUTING.md">contributing guide</a> in addition to the following suggestions.
+<ul>
+ 	<li>Send <a href="https://docs.cfengine.com/">documentation</a> updates as pull requests to <a href="https://github.com/cfengine/documentation">cfengine/documentation</a>.</li>
+ 	<li>Search for <a href="https://tracker.mender.io/issues/?jql=project%20%3D%20CFE%20AND%20status%20in%20(Open%2C%20%22To%20Do%22)%20AND%20labels%20in%20(easy%2C%20help_wanted)">issues labeled easy or help_wanted that are OPEN or TODO</a> that are good candidates for new contributors to <a href="https://github.com/cfengine/core">cfengine/core</a> or <a href="https://github.com/cfengine/masterfiles">cfengine/masterfiles</a>.</li>
+ 	<li>Fix issues pointed out by <a href="https://lgtm.com/projects/g/cfengine/core/alerts/">code analysis</a>.</li>
+</ul>

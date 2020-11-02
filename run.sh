@@ -10,4 +10,7 @@ rm -rf output/ && \
     --post-folders false \
     --save-attached-images true \
     --save-scraped-images true \
-    --original-url true
+    --original-url true \
+    --markdown true \
+    --json true \
+    --html true

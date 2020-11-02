@@ -83,6 +83,27 @@ const options = [
 		type: 'boolean',
 		description: 'Save images scraped from post body content',
 		default: false
+	},
+	{
+		name: 'markdown',
+		aliases: ['md'],
+		type: 'boolean',
+		description: 'Save markdown files',
+		default: true
+	},
+	{
+		name: 'json',
+		aliases: [],
+		type: 'boolean',
+		description: 'Save JSON files',
+		default: false
+	},
+	{
+		name: 'html',
+		aliases: [],
+		type: 'boolean',
+		description: 'Save html files',
+		default: false
 	}
 ];
 
@@ -112,6 +133,10 @@ async function getConfig(argv) {
 	}
 
 	const config = { ...program.opts(), ...answers };
+	if (!config.markdown && !config.html && !config.json) {
+		console.log("No output format enabled, you need to set --md, --json, or --html to true");
+		process.exit(1);
+	}
 	return config;
 }
 

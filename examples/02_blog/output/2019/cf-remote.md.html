@@ -1,0 +1,94 @@
+About a year ago, I wrote a small python script to automate installing and bootstrapping CFEngine on virtual machines in AWS. It had some hard coded IP addresses that I needed to update when I spawned new hosts, but other than that, it worked well. During manual testing, it saved me a lot of time instead of having to do things manually.
+
+Deploying CFEngine normally consists of these steps:
+<ol class="incremental">
+ 	<li>Determine what CFEngine package to use.</li>
+ 	<li>Download appropriate package if you haven't already - <code>curl</code>.</li>
+ 	<li>Copy the package to the host - <code>scp</code>.</li>
+ 	<li>Log into the host - <code>ssh</code>.</li>
+ 	<li>Install the package - <code>rpm</code> / <code>dpkg</code>.</li>
+ 	<li>Bootstrap CFEngine - <code>cf-agent -B</code>.</li>
+</ol>
+At a company hackathon I decided to make my script into something better, something that would be useful to my colleagues, and maybe even CFEngine users in general. Enter <code>cf-remote</code>.
+<h2 id="info">Info</h2>
+<code>cf-remote</code> can be used to show information about a system before installing CFEngine. The <code>info</code> command logs into the system, runs a few commands and parses <a href="https://www.freedesktop.org/software/systemd/man/os-release.html"><code>/etc/os-release</code></a> to present relevant information:
+<pre><code>$ cf-remote info -H 34.252.28.73
+
+ec2-user@34.252.28.73
+OS            : rhel (fedora)
+Architecture  : x86_64
+CFEngine      : Not installed
+Policy server : None
+Binaries      : rpm, yum
+</code></pre>
+The <code>cf-remote</code> command line tool is written in Python, and uses <a href="http://www.fabfile.org/">Fabric</a> to log into the system via SSH. (Add <code>--log-level debug</code> to see all commands <code>cf-remote</code> runs). Note that there are almost no dependencies on the target system. You only need ssh access and a shell which can perform basic UNIX commands like <code>ls</code>, <code>cat</code>, <code>which</code>.
+
+The printout shows that it's a Red Hat machine, and CFEngine is not installed yet.
+<h2 id="install-and-bootstrap">Install and bootstrap</h2>
+<code>cf-remote</code> can install CFEngine on the system above. The only thing you really need to specify is IP address(es):
+<pre><code>$ cf-remote install --hub 34.252.28.73 --bootstrap 172.31.30.237
+</code></pre>
+Here is the output from the example above:
+<pre><code>$ cf-remote install --hub 34.252.28.73 --bootstrap 172.31.30.237
+
+ec2-user@34.252.28.73
+OS            : rhel (fedora)
+Architecture  : x86_64
+CFEngine      : Not installed
+Policy server : None
+Binaries      : rpm, yum
+
+Package already downloaded: '/Users/olehermanse/.cfengine/cf-remote/packages/cfengine-nova-hub-3.12.1-1.x86_64.rpm'
+Copying: '/Users/olehermanse/.cfengine/cf-remote/packages/cfengine-nova-hub-3.12.1-1.x86_64.rpm' to '34.252.28.73'
+Installing: 'cfengine-nova-hub-3.12.1-1.x86_64.rpm' on '34.252.28.73'
+CFEngine 3.12.1 was successfully installed on '34.252.28.73'
+Bootstrapping: '34.252.28.73' -&gt; '172.31.30.237'
+Bootstrap successful: '34.252.28.73' -&gt; '172.31.30.237'
+</code></pre>
+We can guess the username and CFEngine version if not specified. Many hosts can be specified in a single command:
+<pre><code>$ cf-remote install --hub 34.252.28.73 --bootstrap 172.31.30.237 --clients 52.212.51.201,52.212.51.202,52.212.51.203
+</code></pre>
+Or using a newline delimited file:
+<pre><code>$ cat ./clients
+52.212.51.201
+52.212.51.202
+52.212.51.203
+$ cf-remote install --hub 34.252.28.73 --bootstrap 172.31.30.237 --clients ./clients
+</code></pre>
+<h2 id="other-useful-commands">Other useful commands</h2>
+The tooling includes a few other useful utilities. Some of these things can be done in CFEngine policy, but <code>cf-remote</code> doesn't assume that CFEngine is installed. Thus, these commands can be useful both before and after installing CFEngine.
+<h3 id="file-copy">File copy</h3>
+The <code>scp</code> command can be used to transfer files to the host.
+<pre><code>$ echo "Hello, world" &gt; txt
+$ cf-remote -H 34.252.28.73 scp txt
+Copying: 'txt' to '34.252.28.73'
+</code></pre>
+The destination defaults to the home folder of the SSH user (<code>/home/ec2-user/txt</code> in this example). The command doesn't actually use an <code>scp</code> executable, but Fabric's <code>Connection.put()</code>.
+<h3 id="arbitrary-command-execution">Arbitrary command execution</h3>
+We can also run commands as if we were logged in via ssh:
+<pre><code>$ cf-remote -H 34.252.28.73 run "cat txt"
+34.252.28.73:    'cat txt' -&gt; 'Hello, world'
+</code></pre>
+This is especially useful to run commands on many hosts. <code>-H</code> accepts a comma separated list or a path to a file (beginning with <code>./</code>, <code>/</code>, <code>../</code> or <code>~/</code>).
+<h2 id="videos">Videos</h2>
+<code>cf-remote</code> was introduced, with some live demos, in my talk at <a href="https://cfgmgmtcamp.eu/">CfgMgmtCamp</a> 2019. The video recording is available on YouTube (<code>cf-remote</code> part starts at <a href="https://www.youtube.com/watch?v=q50_QTd1AN4&amp;t=20m51s">20:51</a>):
+
+<a href="https://www.youtube.com/watch?v=q50_QTd1AN4">https://www.youtube.com/watch?v=q50_QTd1AN4</a>
+
+We also made some videos showing how to install and use <code>cf-remote</code>:
+
+<a href="https://youtu.be/cEipwS4SePc">Install cf-remote</a>
+
+<a href="https://youtu.be/l4kJ4qAvT1I">Deploying CFEngine using cf-remote</a>
+<h2 id="getting-started">Getting started</h2>
+The tool is completely open source, and part of the <a href="https://github.com/cfengine/core">CFEngine core repository</a>:
+
+<a href="https://github.com/cfengine/core/tree/master/contrib/cf-remote">https://github.com/cfengine/core/tree/master/contrib/cf-remote</a>
+
+The README has installation instructions. It should work on any system with curl, Python(3), <a href="http://www.fabfile.org/">Fabric</a>, and <a href="http://docs.python-requests.org/en/master/">Requests</a>. We've tested it on Linux(Fedora) and OS X. Currently, RHEL and Ubuntu targets are supported. Debian, Fedora, and CentOS should also work as they use <code>dpkg</code> / <code>rpm</code>. The target must be running an SSH server with your key in <code>authorized_keys</code>, so Fabric can log in.
+<h3 id="contributing">Contributing</h3>
+Anyone can contribute to <code>cf-remote</code>, we have a curated list of tickets to pick up here:
+
+<a href="https://tracker.mender.io/issues/?filter=11704">https://tracker.mender.io/issues/?filter=11704</a>
+
+Additional platform support (beyond dpkg and rpm) and parallellized installation are good next features.

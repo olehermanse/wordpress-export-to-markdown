@@ -8,7 +8,15 @@ const shared = require('./shared');
 const settings = require('./settings');
 
 async function writeFilesPromise(posts, config) {
-	await writeMarkdownFilesPromise(posts, config);
+	if (config.markdown) {
+		await writeMarkdownFilesPromise(posts, config);
+	}
+	if (config.json) {
+		await writeJsonFilesPromise(posts, config);
+	}
+	if (config.html) {
+		await writeHtmlFilesPromise(posts, config);
+	}
 	await writeImageFilesPromise(posts, config);
 }
 
@@ -50,8 +58,34 @@ async function writeMarkdownFilesPromise(posts, config) {
 		delay: index * settings.markdown_file_write_delay
 	}));
 
-	console.log('\nSaving posts...');
+	console.log('\nSaving markdown files...');
 	await processPayloadsPromise(payloads, loadMarkdownFilePromise, config);
+}
+
+async function writeJsonFilesPromise(posts, config) {
+	// package up posts into payloads
+	const payloads = posts.map((post, index) => ({
+		item: post,
+		name: post.meta.slug,
+		destinationPath: getPostJsonPath(post, config),
+		delay: index * settings.markdown_file_write_delay
+	}));
+
+	console.log('\nSaving JSON files...');
+	await processPayloadsPromise(payloads, loadJsonFilePromise, config);
+}
+
+async function writeHtmlFilesPromise(posts, config) {
+	// package up posts into payloads
+	const payloads = posts.map((post, index) => ({
+		item: post,
+		name: post.meta.slug,
+		destinationPath: getPostHtmlPath(post, config),
+		delay: index * settings.markdown_file_write_delay
+	}));
+
+	console.log('\nSaving HTML files..');
+	await processPayloadsPromise(payloads, loadHtmlFilePromise, config);
 }
 
 function formatArray(a) {
@@ -76,6 +110,14 @@ async function loadMarkdownFilePromise(post) {
 	});
 	output += '---\n\n' + post.content + '\n';
 	return output;
+}
+
+async function loadJsonFilePromise(post) {
+	return JSON.stringify(post, null, 2);
+}
+
+async function loadHtmlFilePromise(post) {
+	return post.contentHtml;
 }
 
 async function writeImageFilesPromise(posts, config) {
@@ -150,6 +192,14 @@ function getPostPath(post, config) {
 	}
 
 	return path.join(...pathSegments);
+}
+
+function getPostJsonPath(post, config) {
+	return getPostPath(post, config) + ".json";
+}
+
+function getPostHtmlPath(post, config) {
+	return getPostPath(post, config) + ".html";
 }
 
 exports.writeFilesPromise = writeFilesPromise;

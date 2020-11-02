@@ -57,7 +57,8 @@ function collectPosts(data, config, authors) {
 				aliases: getAliases(post),
 				original_url: config.originalUrl ? getPostUrl(post) : null,
 			},
-			content: translator.getPostContent(post, turndownService, config)
+			content: translator.getPostContent(post, turndownService, config),
+			contentHtml: post.encoded[0]
 		}));
 
 	console.log(posts.length + ' posts found.');

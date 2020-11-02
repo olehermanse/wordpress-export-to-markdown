@@ -1,0 +1,26 @@
+{
+  "meta": {
+    "id": "9372",
+    "slug": "example-post-title",
+    "link": "https://example.com/example-post-title/",
+    "imageUrls": []
+  },
+  "frontmatter": {
+    "author": "Example User",
+    "title": "Example post title",
+    "date": "2018-05-02T15:51:57.000Z",
+    "categories": [
+      "example-category"
+    ],
+    "tags": [
+      "coding",
+      "example"
+    ],
+    "aliases": [
+      "/example-post-title/"
+    ],
+    "original_url": null
+  },
+  "content": "Some example content.",
+  "contentHtml": "<p> Some example content.</p>"
+}

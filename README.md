@@ -177,6 +177,36 @@ Whether or not to download and save images scraped from &lt;img&gt; tags in post
 
 Put the original URL from wordpress in as `original_url` in frontmatter.
 
+### Save markdown files
+
+- Argument: `--markdown`
+- Type: `boolean`
+- Default: `true`
+
+Whether or not to write markdown files.
+If you are using html or JSON files instead, you may not need it.
+
+### Save JSON files
+
+- Argument: `--json`
+- Type: `boolean`
+- Default: `false`
+
+Whether or not to write JSON files.
+These can be useful for debugging, or if you want to use a different program to render markdown.
+They contain all of the internal data for the post, including the frontmatter, metadata,
+and post content itself.
+Look in `examples/` to see the structure of the json files.
+
+### Save HTML files
+
+- Argument: `--html`
+- Type: `boolean`
+- Default: `false`
+
+Whether or not to write HTML files.
+If you are using html or JSON files instead, you may not need it.
+
 ## Examples
 
 `examples/` folder contains some examples and the outputs they generate.
