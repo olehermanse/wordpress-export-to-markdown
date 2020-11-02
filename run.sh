@@ -12,6 +12,7 @@ rm -rf output/ && \
     --save-scraped-images true \
     --original-url true \
     --markdown true \
+    --pandoc true \
     --json true \
     --yaml true \
     --html true

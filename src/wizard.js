@@ -92,6 +92,13 @@ const options = [
 		default: true
 	},
 	{
+		name: 'pandoc',
+		aliases: [],
+		type: 'boolean',
+		description: 'Use pandoc (CLI) to render markdown instead of turndown',
+		default: false
+	},
+	{
 		name: 'json',
 		aliases: [],
 		type: 'boolean',

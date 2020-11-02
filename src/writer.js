@@ -3,14 +3,13 @@ const fs = require('fs');
 const luxon = require('luxon');
 const path = require('path');
 const requestPromiseNative = require('request-promise-native');
+const util = require('util');
+const exec = util.promisify(require('child_process').exec);
 
 const shared = require('./shared');
 const settings = require('./settings');
 
 async function writeFilesPromise(posts, config) {
-	if (config.markdown) {
-		await writeMarkdownFilesPromise(posts, config);
-	}
 	if (config.json) {
 		await writeJsonFilesPromise(posts, config);
 	}
@@ -19,6 +18,12 @@ async function writeFilesPromise(posts, config) {
 	}
 	if (config.html) {
 		await writeHtmlFilesPromise(posts, config);
+	}
+	if (config.pandoc) {
+		await writePandocFilesPromise(posts, config);
+	}
+	else if (config.markdown) {
+		await writeMarkdownFilesPromise(posts, config);
 	}
 	await writeImageFilesPromise(posts, config);
 }
@@ -63,6 +68,19 @@ async function writeMarkdownFilesPromise(posts, config) {
 
 	console.log('\nSaving markdown files...');
 	await processPayloadsPromise(payloads, loadMarkdownFilePromise, config);
+}
+
+async function writePandocFilesPromise(posts, config) {
+	// package up posts into payloads
+	const payloads = posts.map((post, index) => ({
+		item: post,
+		name: post.meta.slug,
+		destinationPath: getPostPath(post, config),
+		delay: index * settings.markdown_file_write_delay
+	}));
+
+	console.log('\nSaving markdown files using pandoc...');
+	await processPayloadsPromise(payloads, loadPandocFilePromise, config);
 }
 
 async function writeJsonFilesPromise(posts, config) {
@@ -131,19 +149,34 @@ function formatFrontmatter(data) {
 	return '---\n' + formatYaml(data) + '---\n\n';
 }
 
-async function loadMarkdownFilePromise(post) {
+async function loadMarkdownFilePromise(post, config) {
 	return formatFrontmatter(post.frontmatter) + post.content + '\n';
 }
 
-async function loadJsonFilePromise(post) {
+async function loadPandocFilePromise(post, config) {
+	const htmlContent = await loadHtmlFilePromise(post, config);
+	const html = getPostHtmlPath(post, config);
+
+	writeFile(html, htmlContent);
+	const command = `pandoc --to=commonmark -i ${html}`;
+
+	const { stdout, stderr } = await exec(command, { shell: true });
+
+	if (stderr) {
+		console.error(`error: ${stderr}`);
+	}
+	return formatFrontmatter(post.frontmatter) + stdout;
+}
+
+async function loadJsonFilePromise(post, config) {
 	return JSON.stringify(post, null, 2);
 }
 
-async function loadYamlFilePromise(post) {
+async function loadYamlFilePromise(post, config) {
 	return formatFrontmatter(post.frontmatter);
 }
 
-async function loadHtmlFilePromise(post) {
+async function loadHtmlFilePromise(post, config) {
 	const content = post.contentHtml;
 	if (content[content.length - 1] != '\n') {
 		return content + '\n';

@@ -186,6 +186,15 @@ Put the original URL from wordpress in as `original_url` in frontmatter.
 Whether or not to write markdown files.
 If you are using html or JSON files instead, you may not need it.
 
+### Use pandoc for converting to markdown files
+
+- Argument: `--pandoc`
+- Type: `boolean`
+- Default: `false`
+
+Spawns the pandoc CLI to convert html to markdown files.
+Requires installing pandoc CLI (not an npm dependency).
+
 ### Save JSON files
 
 - Argument: `--json`

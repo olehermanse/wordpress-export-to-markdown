@@ -10,6 +10,7 @@ node index.js \
     --save-scraped-images true \
     --original-url false \
     --markdown true \
+    --pandoc false \
     --json true \
     --yaml true \
     --html true
@@ -25,6 +26,7 @@ node index.js \
     --save-scraped-images true \
     --original-url true \
     --markdown true \
+    --pandoc true \
     --json true \
     --yaml true \
     --html true
