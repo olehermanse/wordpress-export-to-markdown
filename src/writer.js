@@ -158,7 +158,7 @@ async function loadPandocFilePromise(post, config) {
 	const html = getPostHtmlPath(post, config);
 
 	writeFile(html, htmlContent);
-	const command = `pandoc --to=commonmark -i ${html}`;
+	const command = `pandoc --to=gfm -i ${html}`;
 
 	const { stdout, stderr } = await exec(command, { shell: true });
 

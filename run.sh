@@ -16,3 +16,7 @@ rm -rf output/ && \
     --json true \
     --yaml true \
     --html true
+
+find output -name '*.md.html' -exec rm {} \;
+find output -name '*.md.json' -exec rm {} \;
+find output -name '*.md.frontmatter.yaml' -exec rm {} \;
