@@ -99,6 +99,13 @@ const options = [
 		default: false
 	},
 	{
+		name: 'yaml',
+		aliases: ['yml'],
+		type: 'boolean',
+		description: 'Save frontmatter YAML files',
+		default: false
+	},
+	{
 		name: 'html',
 		aliases: [],
 		type: 'boolean',
@@ -133,8 +140,8 @@ async function getConfig(argv) {
 	}
 
 	const config = { ...program.opts(), ...answers };
-	if (!config.markdown && !config.html && !config.json) {
-		console.log("No output format enabled, you need to set --md, --json, or --html to true");
+	if (!config.markdown && !config.html && !config.json && !config.yaml) {
+		console.log("No output format enabled, you need to set --md, --yaml, --json, or --html to true");
 		process.exit(1);
 	}
 	return config;

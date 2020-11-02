@@ -198,6 +198,18 @@ They contain all of the internal data for the post, including the frontmatter, m
 and post content itself.
 Look in `examples/` to see the structure of the json files.
 
+### Save YAML files
+
+- Argument: `--yaml`
+- Type: `boolean`
+- Default: `false`
+
+Whether or not to write `.frontmatter.yaml` files.
+If you use another converter, like pandoc, to convert from html to markdown, these files are easy to prepend.
+Look in `examples/` to see the structure of the frontmatter YAML files.
+
+**Note:** The yaml files contain only the frontmatter, not the same data as the JSON files.
+
 ### Save HTML files
 
 - Argument: `--html`

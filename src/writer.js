@@ -14,6 +14,9 @@ async function writeFilesPromise(posts, config) {
 	if (config.json) {
 		await writeJsonFilesPromise(posts, config);
 	}
+	if (config.yaml) {
+		await writeYamlFilesPromise(posts, config);
+	}
 	if (config.html) {
 		await writeHtmlFilesPromise(posts, config);
 	}
@@ -75,6 +78,19 @@ async function writeJsonFilesPromise(posts, config) {
 	await processPayloadsPromise(payloads, loadJsonFilePromise, config);
 }
 
+async function writeYamlFilesPromise(posts, config) {
+	// package up posts into payloads
+	const payloads = posts.map((post, index) => ({
+		item: post,
+		name: post.meta.slug,
+		destinationPath: getPostYamlPath(post, config),
+		delay: index * settings.markdown_file_write_delay
+	}));
+
+	console.log('\nSaving YAML files...');
+	await processPayloadsPromise(payloads, loadYamlFilePromise, config);
+}
+
 async function writeHtmlFilesPromise(posts, config) {
 	// package up posts into payloads
 	const payloads = posts.map((post, index) => ({
@@ -96,9 +112,9 @@ function formatValue(v) {
 	return (' "' + (v || '').replace(/"/g, '\\"') + '"');
 }
 
-async function loadMarkdownFilePromise(post) {
-	let output = '---\n';
-	Object.entries(post.frontmatter).forEach(pair => {
+function formatYaml(data) {
+	let output = "";
+	Object.entries(data).forEach(pair => {
 		const key = pair[0];
 		const value = pair[1];
 		if (value != null && value != [] && value != "") {
@@ -108,12 +124,23 @@ async function loadMarkdownFilePromise(post) {
 			output += key + ':' + value_formatted + '\n';
 		}
 	});
-	output += '---\n\n' + post.content + '\n';
 	return output;
+}
+
+function formatFrontmatter(data) {
+	return '---\n' + formatYaml(data) + '---\n\n';
+}
+
+async function loadMarkdownFilePromise(post) {
+	return formatFrontmatter(post.frontmatter) + post.content + '\n';
 }
 
 async function loadJsonFilePromise(post) {
 	return JSON.stringify(post, null, 2);
+}
+
+async function loadYamlFilePromise(post) {
+	return formatFrontmatter(post.frontmatter);
 }
 
 async function loadHtmlFilePromise(post) {
@@ -200,6 +227,10 @@ function getPostPath(post, config) {
 
 function getPostJsonPath(post, config) {
 	return getPostPath(post, config) + ".json";
+}
+
+function getPostYamlPath(post, config) {
+	return getPostPath(post, config) + ".frontmatter.yaml";
 }
 
 function getPostHtmlPath(post, config) {

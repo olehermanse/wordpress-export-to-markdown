@@ -11,6 +11,7 @@ node index.js \
     --original-url false \
     --markdown true \
     --json true \
+    --yaml true \
     --html true
 node index.js \
     --post-type pt_blog \
@@ -25,4 +26,5 @@ node index.js \
     --original-url true \
     --markdown true \
     --json true \
+    --yaml true \
     --html true

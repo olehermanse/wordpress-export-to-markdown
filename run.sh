@@ -13,4 +13,5 @@ rm -rf output/ && \
     --original-url true \
     --markdown true \
     --json true \
+    --yaml true \
     --html true
