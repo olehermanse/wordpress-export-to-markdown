@@ -3,8 +3,7 @@ const fs = require('fs');
 const luxon = require('luxon');
 const path = require('path');
 const requestPromiseNative = require('request-promise-native');
-const util = require('util');
-const exec = util.promisify(require('child_process').exec);
+const { spawn } = require('child_process');
 
 const shared = require('./shared');
 const settings = require('./settings');
@@ -155,17 +154,26 @@ async function loadMarkdownFilePromise(post, config) {
 
 async function loadPandocFilePromise(post, config) {
 	const htmlContent = await loadHtmlFilePromise(post, config);
-	const html = getPostHtmlPath(post, config);
+	const command = `pandoc --from=html --to=gfm`;
+	const pandoc = spawn(command, { shell: true });
+	pandoc.stdin.write(htmlContent);
+	pandoc.stdin.end();
 
-	writeFile(html, htmlContent);
-	const command = `pandoc --to=gfm -i ${html}`;
-
-	const { stdout, stderr } = await exec(command, { shell: true });
-
-	if (stderr) {
-		console.error(`error: ${stderr}`);
+	let error = "";
+	for await (const chunk of pandoc.stderr) {
+		console.error('stderr chunk: ' + chunk);
+		error += chunk;
 	}
-	return formatFrontmatter(post.frontmatter) + stdout;
+	if (error) {
+		process.exit(1);
+	}
+
+	let output = "";
+	for await (const chunk of pandoc.stdout) {
+		output += chunk;
+	}
+
+	return formatFrontmatter(post.frontmatter) + output;
 }
 
 async function loadJsonFilePromise(post, config) {
