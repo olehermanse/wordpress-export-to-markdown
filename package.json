@@ -24,7 +24,7 @@
 		"chalk": "^4.1.0",
 		"commander": "^5.1.0",
 		"inquirer": "^7.3.3",
-		"luxon": "^1.25.0",
+		"luxon": "^2.5.2",
 		"request": "^2.88.2",
 		"request-promise-native": "^1.0.9",
 		"turndown": "^6.0.0",
